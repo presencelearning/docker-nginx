@@ -1,4 +1,5 @@
 FROM dockerfile/nginx:latest
+MAINTAINER Francois Gaudin <francois@presencelearning.com>
 
 RUN \
   apt-get update && apt-get install -y golang ruby-dev gcc supervisor \
