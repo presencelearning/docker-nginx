@@ -6,8 +6,12 @@ Nginx container using logstash-forwarder
 * [dockerfile/nginx](http://dockerfile.github.io/#/nginx)
 
 ## usage 
-    sudo docker run -p 8080:80 -d --link logstash:logstash --volumes-from logstash fgaudin/nginx
+    docker run -p 8080:80 -d --link logstash:logstash --volumes-from logstash fgaudin/nginx
 
-This assumes that your logstash container is running on the same host.
-Link is used to provide the domain name/IP of the logstash container while volumes-from is used to provide the certificates
+If logstash is on another host, you can provide the logstash address and the certificates like this:
 
+    docker run -p 8080:80 -d -e LOGSTASH_PORT_5043_TCP_ADDR=172.17.42.1 -e LOGSTASH_PORT_5043_TCP_PORT=15043 -v /path/to/certificates_dir:/mnt/logstash-forwarder fgaudin/nginx
+
+## see also
+
+* [fgaudin/logstash](https://registry.hub.docker.com/u/fgaudin/logstash/)

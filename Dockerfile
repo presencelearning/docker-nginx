@@ -15,5 +15,8 @@ COPY logstash-forwarder.conf /etc/logstash-forwarder/
 RUN mkdir -p /var/log/supervisor
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-CMD ["/usr/bin/supervisord"]
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
+CMD ["/usr/bin/supervisord"]
+ENTRYPOINT ["/entrypoint.sh"]
