@@ -8,4 +8,4 @@ if [ -n "$LOGSTASH_PORT_5043_TCP_ADDR" ]; then
 fi
 printf '%s\n' "$config" >/etc/logstash-forwarder/logstash-forwarder.conf
 
-$@
+exec "$@"
