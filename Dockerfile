@@ -1,22 +1,25 @@
-FROM dockerfile/nginx:latest
+FROM ablerman/base:latest
 MAINTAINER Francois Gaudin <francois@presencelearning.com>
 
+# Install Nginx.
 RUN \
-  apt-get update && apt-get install -y golang ruby-dev gcc supervisor \
-  && gem install fpm \
-  && wget https://github.com/elasticsearch/logstash-forwarder/archive/v0.3.1.tar.gz -O /tmp/logstash-forwarder.tar.gz \ 
-  && cd /tmp && tar xzf logstash-forwarder.tar.gz && cd logstash-forwarder-0.3.1/ && go build && make deb \ 
-  && dpkg -i lumberjack_0.3.1_amd64.deb \
-  && apt-get remove -y golang ruby-dev gcc && apt-get autoremove -y \
-  && apt-get clean && rm -rf /var/lib/{apt,dpkg,cache,log,gems}/ \
-  && rm -rf /tmp/*
+  apt-get -y install software-properties-common && \
+  add-apt-repository -y ppa:nginx/stable && \
+  apt-get update && \
+  apt-get install -y nginx && \
+  rm -rf /var/lib/apt/lists/* && \
+  echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \
+  chown -R www-data:www-data /var/lib/nginx
 
 COPY logstash-forwarder.conf /etc/logstash-forwarder/
+COPY supervisord.conf /etc/supervisor/conf.d/nginx.conf
 
-RUN mkdir -p /var/log/supervisor
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# Define mountable directories.
+VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/var/www/html"]
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Define working directory.
+WORKDIR /etc/nginx
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Expose ports.
+EXPOSE 80
+EXPOSE 443
