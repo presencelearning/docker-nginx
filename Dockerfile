@@ -11,6 +11,7 @@ RUN \
   apt-get install -y ca-certificates nginx=${NGINX_VERSION} && \
   rm -rf /var/lib/apt/lists/*
 
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY logstash-forwarder.conf /etc/logstash-forwarder/
 COPY supervisord.conf /etc/supervisor/conf.d/nginx.conf
 
