@@ -9,7 +9,7 @@ RUN \
   add-apt-repository -y "deb http://nginx.org/packages/mainline/ubuntu/ trusty nginx" && \
   apt-get update && \
   apt-get install -y ca-certificates nginx=${NGINX_VERSION} && \
-  rm -rf /var/lib/apt/lists/*
+  apt-get clean && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY logstash-forwarder.conf /etc/logstash-forwarder/
