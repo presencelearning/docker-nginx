@@ -1,4 +1,4 @@
-FROM ablerman/base:latest
+FROM fgaudin/base:3
 MAINTAINER Francois Gaudin <francois@presencelearning.com>
 
 ENV NGINX_VERSION 1.7.10-1~trusty
@@ -12,7 +12,7 @@ RUN \
   apt-get clean && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY logstash-forwarder.conf /etc/logstash-forwarder/
+COPY logstash-forwarder.conf /etc/logstash-forwarder/nginx.conf
 COPY supervisord.conf /etc/supervisor/conf.d/nginx.conf
 
 # Define mountable directories.
